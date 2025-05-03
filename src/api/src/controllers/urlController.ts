@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   getByLongUrl,
   getByShortUrlCode,
+  getUrlStatistics,
   saveUrl,
 } from "../repositories/urlRepository";
 import { shortBaseUrl } from "../constants";
@@ -51,4 +52,15 @@ export const decodeUrl = (req: Request, res: Response): void => {
   }
   
   res.status(200).json(ResponseHelper.success({ longUrl: record.longUrl }));
+}
+
+export const getUrlStats = (req: Request, res: Response): void => {
+  const stat= getUrlStatistics(req.params.url_path);
+  
+  if (!stat) {
+    res.status(400).json(ResponseHelper.error("URL not found"));
+    return;
+  }
+    
+  res.status(200).json(ResponseHelper.success(stat));
 }

@@ -1,3 +1,4 @@
+import { shortBaseUrl } from "../constants";
 import { IShortUrlRecord } from "../models/urlModel";
 
 const urlMap: Map<string, IShortUrlRecord> = new Map();
@@ -25,3 +26,15 @@ export const getByLongUrl = (longUrl: string): IShortUrlRecord | undefined => {
 }
 
 export const getByShortUrlCode = (shortUrlCode: string): IShortUrlRecord | undefined => urlMap.get(shortUrlCode);
+
+export const getUrlStatistics = (shortUrl: string) => {
+  const record = urlMap.get(shortUrl);
+  
+  if (!record) return null;
+  
+  return {
+    longUrl: record.longUrl,
+    shortUrl: `${shortBaseUrl}/${shortUrl}`,
+    stats: record.stats
+  }
+}
