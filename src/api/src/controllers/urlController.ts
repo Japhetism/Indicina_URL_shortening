@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   getByLongUrl,
   getByShortUrlCode,
+  getUrls,
   getUrlStatistics,
   saveUrl,
 } from "../repositories/urlRepository";
@@ -63,4 +64,8 @@ export const getUrlStats = (req: Request, res: Response): void => {
   }
     
   res.status(200).json(ResponseHelper.success(stat));
+}
+
+export const listUrls = (_req: Request, res: Response): void => {
+  res.status(200).json(ResponseHelper.success(getUrls()))
 }

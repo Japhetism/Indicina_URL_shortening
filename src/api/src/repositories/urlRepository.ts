@@ -38,3 +38,11 @@ export const getUrlStatistics = (shortUrl: string) => {
     stats: record.stats
   }
 }
+
+export const getUrls = () => {
+  return Array.from(urlMap.values()).map((record) => ({
+    longUrl: record.longUrl,
+    shortUrl: `${shortBaseUrl}/${record.shortUrl}`,
+    stats: record.stats
+  }))
+}
