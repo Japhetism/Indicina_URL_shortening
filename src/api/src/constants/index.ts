@@ -17,3 +17,4 @@ export const shortUrlNotFoundErrorMessage = "Short URL not found";
 export const apiBaseUrl = "/api/v1";
 
 export const encodeBaseUrl = `${apiBaseUrl}/encode`;
+export const decodeBaseUrl = `${apiBaseUrl}/decode`;
