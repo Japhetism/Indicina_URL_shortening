@@ -1,3 +1,5 @@
+import { Request } from "express";
+import { UAParser } from 'ua-parser-js';
 import { shortBaseUrl } from "../constants";
 import { IShortUrlRecord } from "../models/urlModel";
 
@@ -45,4 +47,28 @@ export const getUrls = () => {
     shortUrl: `${shortBaseUrl}/${record.shortUrl}`,
     stats: record.stats
   }))
+}
+
+export const incrementUrlVisit = (shortUrl: string, req: Request): void => {
+  const record = urlMap.get(shortUrl);
+  
+  if (!record) return;
+  
+  const ua = UAParser(req.headers["user-agent"]);
+  const browser = ua.browser.name || "Unknown";
+  const cpu = ua.cpu.architecture || "Unknown";
+  const device = ua.device.model || "Unknown";
+  const type = ua.device.type || "Unknown";
+  
+  record.stats.deviceStats = record.stats.deviceStats || {};
+  record.stats.cpuStats = record.stats.cpuStats || {};
+  record.stats.typeStats = record.stats.typeStats || {};
+  record.stats.browserStats = record.stats.browserStats || {};
+  
+  record.stats.visits++;
+  record.stats.lastAccessedAt = new Date();
+  record.stats.deviceStats[device] = (record.stats.deviceStats[device] || 0) + 1;
+  record.stats.cpuStats[cpu] = (record.stats.cpuStats[cpu] || 0) + 1;
+  record.stats.typeStats[type] = (record.stats.typeStats[type] || 0) + 1;
+  record.stats.browserStats[browser] = (record.stats.browserStats[browser] || 0) + 1;
 }

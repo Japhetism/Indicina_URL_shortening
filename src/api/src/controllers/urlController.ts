@@ -4,6 +4,7 @@ import {
   getByShortUrlCode,
   getUrls,
   getUrlStatistics,
+  incrementUrlVisit,
   saveUrl,
 } from "../repositories/urlRepository";
 import { shortBaseUrl } from "../constants";
@@ -68,4 +69,18 @@ export const getUrlStats = (req: Request, res: Response): void => {
 
 export const listUrls = (_req: Request, res: Response): void => {
   res.status(200).json(ResponseHelper.success(getUrls()))
+}
+
+export const redirectToLongUrl = (req: Request, res: Response): void => {
+  const code = req.params.url_path;
+    
+  const record = getByShortUrlCode(code);
+  
+  if (!record) {
+    res.status(400).send("Not found");
+    return;
+  }
+    
+  incrementUrlVisit(code, req);
+  res.redirect(record.longUrl);
 }
