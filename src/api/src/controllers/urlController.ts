@@ -7,7 +7,7 @@ import {
   incrementUrlVisit,
   saveUrl,
 } from "../repositories/urlRepository";
-import { shortBaseUrl } from "../constants";
+import { longUrlInvalidErrorMessage, longUrlRequiredErrorMessage, shortBaseUrl, shortUrlNotFoundErrorMessage, shortUrlRequiredErrorMessage } from "../constants";
 import { ResponseHelper } from "../utils/responseHelper";
 import { generateShortUrlCode, isValidHttpUrl } from "../utils/helper";
 
@@ -15,12 +15,12 @@ export const encodeUrl = (req: Request, res: Response): void => {
   const { longUrl } = req.body;
   
   if (!longUrl) {
-    res.status(400).json(ResponseHelper.error("Long URL is required"));
+    res.status(400).json(ResponseHelper.error(longUrlRequiredErrorMessage));
     return;
   }
 
   if (!isValidHttpUrl(longUrl)) {
-    res.status(400).json(ResponseHelper.error("Invalid URL. must be a valid HTTP/HTTPS URL."));
+    res.status(400).json(ResponseHelper.error(longUrlInvalidErrorMessage));
     return;
   }
   
@@ -40,7 +40,7 @@ export const decodeUrl = (req: Request, res: Response): void => {
   const { shortUrl } = req.body;
   
   if (!shortUrl) {
-    res.status(400).json(ResponseHelper.error("Short URL is required"));
+    res.status(400).json(ResponseHelper.error(shortUrlRequiredErrorMessage));
     return;
   }
   
@@ -49,7 +49,7 @@ export const decodeUrl = (req: Request, res: Response): void => {
   const record = getByShortUrlCode(shortUrlCode);
   
   if (!record) {
-    res.status(400).json(ResponseHelper.error("Short URL not found"));
+    res.status(400).json(ResponseHelper.error(shortUrlNotFoundErrorMessage));
     return;
   }
   

@@ -1,52 +1,59 @@
 import request from "supertest";
 import express, { Express } from "express";
 import { encodeUrl } from "../controllers/urlController";
-import { shortBaseUrl } from "../constants";
+import {
+  encodeBaseUrl,
+  errorResponseMessage,
+  longUrlForEdgeCase,
+  longUrlInvalidErrorMessage,
+  longUrlRequiredErrorMessage,
+  shortUrlRegex,
+  successResponseMessage,
+  validHttpUrl,
+  validLongUrl,
+  validUrlWithQuery
+} from "../constants";
 
 const app: Express = express();
 
 app.use(express.json());
 
-app.post("/api/v1/encode", encodeUrl);
+app.post(encodeBaseUrl, encodeUrl);
 
-describe("POST /api/v1/encode", () => {
+const sendEncodeRequest = (longUrl: string) => {
+  return request(app)
+    .post(encodeBaseUrl)
+    .send({ longUrl });
+};
+
+const assertShortUrlFormat = (response: any) => {
+  expect(response.body.data.shortUrl).toMatch(shortUrlRegex);
+};
+
+describe(`POST ${encodeBaseUrl}`, () => {
   it("should encode a valid URL into a shortened URL", async () => {
-    const longUrl = "https://www.indicina.com";
-
-    const response = await request(app)
-      .post("/api/v1/encode")
-      .send({ longUrl });
+    const response = await sendEncodeRequest(validLongUrl)
     
     expect(response.status).toBe(200);
-    expect(response.body.message).toBe("successful");
-    expect(response.body.data.shortUrl).toMatch(new RegExp(`^${shortBaseUrl.replace('.', '\\.')}/[A-Za-z0-9]+$`));
-
+    expect(response.body.message).toBe(successResponseMessage);
+    assertShortUrlFormat(response);
   });
 
   it("should return an error for an invalid URL", async () => {
     const longUrl = "s https://www.indicina.com";
 
-    const response = await request(app)
-      .post("/api/v1/encode")
-      .send({ longUrl });
+    const response = await sendEncodeRequest(longUrl);
 
     expect(response.status).toBe(400);
-    expect(response.body.message).toBe("failure");
-    expect(response.body.error).toBe("Invalid URL. must be a valid HTTP/HTTPS URL.")
+    expect(response.body.message).toBe(errorResponseMessage);
+    expect(response.body.error).toBe(longUrlInvalidErrorMessage)
   });
 
   it("should return the existing short URL if URL already encoded", async () => {
-    const longUrl = "https://www.indicina.com";
-
-    const initialResponse = await request(app)
-      .post("/api/v1/encode")
-      .send({ longUrl });
-    
+    const initialResponse = await sendEncodeRequest(validLongUrl)
     const initialShortUrl = initialResponse.body.data.shortUrl;
 
-    const finalResponse = await request(app)
-      .post("/api/v1/encode")
-      .send({ longUrl });
+    const finalResponse = await sendEncodeRequest(validLongUrl);
 
     expect(finalResponse.body.data.shortUrl).toBe(initialShortUrl);
   });
@@ -57,45 +64,30 @@ describe("POST /api/v1/encode", () => {
       .send({});
 
     expect(response.status).toBe(400);
-    expect(response.body.message).toBe("failure");
-    expect(response.body.error).toBe("Long URL is required");
+    expect(response.body.message).toBe(errorResponseMessage);
+    expect(response.body.error).toBe(longUrlRequiredErrorMessage);
   });
 
   it("should encode an HTTP URL (not just HTTPS)", async () => {
-    const longUrl = "http://wwww.indicina.co";
-
-    const response = await request(app)
-      .post("/api/v1/encode")
-      .send({ longUrl });
+    const response = await sendEncodeRequest(validHttpUrl);
 
     expect(response.status).toBe(200);
-    expect(response.body.message).toBe("successful");
-    expect(response.body.data.shortUrl).toMatch(new RegExp(`^${shortBaseUrl.replace('.', '\\.')}/[A-Za-z0-9]+$`));
+    expect(response.body.message).toBe(successResponseMessage);
+    assertShortUrlFormat(response);
   });
 
   it("should encode a valid URL with query parameters", async () => {
-    const longUrl = "https://wwww.indicina.co/search?q=dev";
-
-    const response = await request(app)
-      .post("/api/v1/encode")
-      .send({ longUrl });
+    const response = await sendEncodeRequest(validUrlWithQuery);
 
     expect(response.status).toBe(200);
-    expect(response.body.message).toBe("successful");
-    expect(response.body.data.shortUrl).toMatch(new RegExp(`^${shortBaseUrl.replace('.', '\\.')}/[A-Za-z0-9]+$`));
+    expect(response.body.message).toBe(successResponseMessage);
+    assertShortUrlFormat(response);
   });
 
   it("should generate different short URLs for different long URLs", async () => {
-    const longUrl1 = "https://www.indicina.co/about";
-    const longUrl2 = "https://www.indicina.co/contact";
+    const response1 = await sendEncodeRequest(longUrlForEdgeCase);
 
-    const response1 = await request(app)
-      .post("/api/v1/encode")
-      .send({ longUrl: longUrl1 });
-    
-    const response2 = await request(app)
-      .post("/api/v1/encode")
-      .send({ longUrl: longUrl2 });
+    const response2 = await sendEncodeRequest("https://www.indicina.co/contact");
 
     expect(response1.body.data.shortUrl).not.toBe(response2.body.data.shortUrl);
   });
@@ -104,36 +96,28 @@ describe("POST /api/v1/encode", () => {
     const baseUrl = "https://www.indicina.co/";
     const longUrl = `${baseUrl}${'a'.repeat(2050 - baseUrl.length)}`;
 
-    const response = await request(app)
-      .post("/api/v1/encode")
-      .send({ longUrl });
+    const response = await sendEncodeRequest(longUrl);
 
     expect(response.status).toBe(200);
-    expect(response.body.message).toBe("successful");
-    expect(response.body.data.shortUrl).toMatch(new RegExp(`^${shortBaseUrl.replace('.', '\\.')}/[A-Za-z0-9]+$`));
+    expect(response.body.message).toBe(successResponseMessage);
+    assertShortUrlFormat(response);
   });
 
   it("shoul reject malformed URL with missing slashes", async () => {
     const longUrl = "http:/wwww.indicina.co";
 
-    const response = await request(app)
-      .post("/api/v1/encode")
-      .send({ longUrl });
+    const response = await sendEncodeRequest(longUrl);
 
     expect(response.status).toBe(400);
-    expect(response.body.message).toBe("failure")
-    expect(response.body.error).toBe("Invalid URL. must be a valid HTTP/HTTPS URL.");
+    expect(response.body.message).toBe(errorResponseMessage)
+    expect(response.body.error).toBe(longUrlInvalidErrorMessage);
   });
 
   it("should return 400 if the long URL is an empty string", async () => {
-    const longUrl = "";
-
-    const response = await request(app)
-      .post("/api/v1/encode")
-      .send({ longUrl });
+    const response = await sendEncodeRequest("")
 
     expect(response.status).toBe(400);
-    expect(response.body.message).toBe("failure")
-    expect(response.body.error).toBe("Long URL is required");
+    expect(response.body.message).toBe(errorResponseMessage)
+    expect(response.body.error).toBe(longUrlRequiredErrorMessage);
   });
 })

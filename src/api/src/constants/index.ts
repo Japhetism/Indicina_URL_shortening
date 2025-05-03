@@ -1,3 +1,19 @@
 export const shortBaseUrl: string = "http://short.est";
 export const successResponseMessage: string = "successful";
 export const errorResponseMessage: string = "failure";
+
+export const validLongUrl = "https://www.indicina.com";
+export const validHttpUrl = "http://www.indicina.co";
+export const validUrlWithQuery = "https://www.indicina.co/search?q=dev";
+export const longUrlForEdgeCase = "https://www.indicina.co/about";
+export const shortUrlRegex = new RegExp(`^${shortBaseUrl.replace('.', '\\.')}/[A-Za-z0-9]+$`);
+
+export const longUrlRequiredErrorMessage = "Long URL is required";
+export const longUrlInvalidErrorMessage = "Invalid URL. must be a valid HTTP/HTTPS URL.";
+
+export const shortUrlRequiredErrorMessage = "Short URL is required";
+export const shortUrlNotFoundErrorMessage = "Short URL not found";
+
+export const apiBaseUrl = "/api/v1";
+
+export const encodeBaseUrl = `${apiBaseUrl}/encode`;
