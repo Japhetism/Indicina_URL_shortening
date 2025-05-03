@@ -7,7 +7,13 @@ import {
   incrementUrlVisit,
   saveUrl,
 } from "../repositories/urlRepository";
-import { longUrlInvalidErrorMessage, longUrlRequiredErrorMessage, shortBaseUrl, shortUrlNotFoundErrorMessage, shortUrlRequiredErrorMessage } from "../constants";
+import {
+  longUrlInvalidErrorMessage,
+  longUrlRequiredErrorMessage,
+  shortBaseUrl,
+  shortUrlNotFoundErrorMessage,
+  shortUrlRequiredErrorMessage
+} from "../constants";
 import { ResponseHelper } from "../utils/responseHelper";
 import { generateShortUrlCode, isValidHttpUrl } from "../utils/helper";
 
@@ -44,8 +50,8 @@ export const decodeUrl = (req: Request, res: Response): void => {
     return;
   }
   
-  const shortUrlCode = shortUrl.split("/").pop() || "";
-  
+  const shortUrlCode = shortUrl.split("/").filter(Boolean).pop() || "";
+
   const record = getByShortUrlCode(shortUrlCode);
   
   if (!record) {
