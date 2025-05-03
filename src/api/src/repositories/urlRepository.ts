@@ -23,3 +23,5 @@ export const getByLongUrl = (longUrl: string): IShortUrlRecord | undefined => {
   const shortUrl = reverseMap.get(longUrl);
   return shortUrl ? urlMap.get(shortUrl) : undefined;
 }
+
+export const getByShortUrlCode = (shortUrlCode: string): IShortUrlRecord | undefined => urlMap.get(shortUrlCode);

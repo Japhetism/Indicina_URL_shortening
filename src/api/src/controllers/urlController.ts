@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import {
   getByLongUrl,
+  getByShortUrlCode,
   saveUrl,
 } from "../repositories/urlRepository";
 import { shortBaseUrl } from "../constants";
@@ -30,4 +31,24 @@ export const encodeUrl = (req: Request, res: Response): void => {
   const shortUrl = generateShortUrlCode();
   const record = saveUrl(shortUrl, longUrl);
   res.json(ResponseHelper.success({ shortUrl: `${shortBaseUrl}/${record.shortUrl}` }))
+}
+
+export const decodeUrl = (req: Request, res: Response): void => {
+  const { shortUrl } = req.body;
+  
+  if (!shortUrl) {
+    res.status(400).json(ResponseHelper.error("Short URL is required"));
+    return;
+  }
+  
+  const shortUrlCode = shortUrl.split("/").pop() || "";
+  
+  const record = getByShortUrlCode(shortUrlCode);
+  
+  if (!record) {
+    res.status(400).json(ResponseHelper.error("Short URL not found"));
+    return;
+  }
+  
+  res.status(200).json(ResponseHelper.success({ longUrl: record.longUrl }));
 }
