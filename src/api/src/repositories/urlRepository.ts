@@ -1,0 +1,25 @@
+import { IShortUrlRecord } from "../models/urlModel";
+
+const urlMap: Map<string, IShortUrlRecord> = new Map();
+const reverseMap: Map<string, string> = new Map();
+
+export const saveUrl = (shortUrl: string, longUrl: string): IShortUrlRecord => {
+  const record: IShortUrlRecord = {
+    shortUrl: shortUrl,
+    longUrl: longUrl,
+    stats: {
+      createdAt: new Date(),
+      visits: 0,
+    }
+  }
+
+  urlMap.set(shortUrl, record);
+  reverseMap.set(longUrl, shortUrl);
+
+  return record;
+}
+
+export const getByLongUrl = (longUrl: string): IShortUrlRecord | undefined => {
+  const shortUrl = reverseMap.get(longUrl);
+  return shortUrl ? urlMap.get(shortUrl) : undefined;
+}
