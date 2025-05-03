@@ -5,13 +5,18 @@ import {
 } from "../repositories/urlRepository";
 import { shortBaseUrl } from "../constants";
 import { ResponseHelper } from "../utils/responseHelper";
-import { generateShortUrlCode } from "../utils/helper";
+import { generateShortUrlCode, isValidHttpUrl } from "../utils/helper";
 
 export const encodeUrl = (req: Request, res: Response): void => {
   const { longUrl } = req.body;
   
   if (!longUrl) {
     res.status(400).json(ResponseHelper.error("Long URL is required"));
+    return;
+  }
+
+  if (!isValidHttpUrl(longUrl)) {
+    res.status(400).json(ResponseHelper.error("Invalid URL. must be a valid HTTP/HTTPS URL."));
     return;
   }
   
