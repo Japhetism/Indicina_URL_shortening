@@ -1,6 +1,7 @@
 export const generateShortUrlCode = (length = 6): string => {
-  return [...Array(length)].map(() => Math.random().toString(36)[2]).join('');
-}
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+};
 
 export const isValidHttpUrl = (url: string): boolean => {
   try {
