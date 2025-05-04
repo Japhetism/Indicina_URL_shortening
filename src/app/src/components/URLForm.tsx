@@ -1,4 +1,5 @@
 import { useState } from "react"
+import Notification from "./Notification";
 import useURLStore from "../store/urlStore";
 
 const UrlForm = () => {
@@ -10,6 +11,7 @@ const UrlForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage(null);
     if (longUrl) {
       setIsEncoding(true);
       try {
@@ -26,6 +28,15 @@ const UrlForm = () => {
   return (
     <div className="max-w-md mx-auto p-4">
       <h2 className="text-2xl font-semibold text-center">Create Short URL</h2>
+        {errorMessage && (
+          <div className="mt-4">
+            <Notification
+              type="error"
+              message={errorMessage}
+              onClose={() => setErrorMessage(null)}
+            />
+          </div>
+        )}
       <form onSubmit={handleSubmit}>
         <input
           type="url"

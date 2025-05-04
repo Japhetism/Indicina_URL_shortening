@@ -29,3 +29,11 @@ export interface IModal {
   children: React.ReactNode;
   onClose: () => void;
 }
+
+export type NotificationType = 'success' | 'error';
+
+export interface INotification {
+  message: string;
+  type: NotificationType;
+  onClose: () => void;
+}
