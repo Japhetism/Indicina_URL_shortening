@@ -1,5 +1,5 @@
 import React from 'react';
-import { INotification } from '../interfaces';
+import { NotificationPropsType } from '../types';
 
 const typeStyles = {
   success: {
@@ -12,7 +12,7 @@ const typeStyles = {
   },
 };
 
-const Notification = ({ message, type, onClose }: INotification) => {
+const Notification = ({ message, type, onClose }: NotificationPropsType) => {
   const styles = typeStyles[type];
 
   return (

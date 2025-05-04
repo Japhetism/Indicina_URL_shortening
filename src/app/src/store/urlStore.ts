@@ -1,14 +1,14 @@
 import { create } from "zustand";
-import { IEncodeUrl, IURLState } from "../interfaces";
+import { EncodeUrlType, URLStateType } from "../types";
 import { apiService } from "../service/apiService";
 
-export const useURLStore = create<IURLState>((set) => ({
+export const useURLStore = create<URLStateType>((set) => ({
   isLoading: false,
   setIsLoading: (isLoading: boolean) => set({ isLoading }),
-  encodeUrl: async (requestData: IEncodeUrl) => {
+  encodeUrl: async (requestData: EncodeUrlType) => {
     set({ isLoading: true })
     try {
-      const response = await apiService<IEncodeUrl, any>({
+      const response = await apiService<EncodeUrlType, any>({
         method: "POST",
         url: "encode",
         data: requestData,

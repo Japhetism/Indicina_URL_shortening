@@ -1,4 +1,7 @@
-export interface IStat {
+import { z } from "zod";
+import { urlSchema } from "../schema";
+
+export type StatType = {
   createdAt: Date;
   visits: number;
   lastAccessedAt?: Date;
@@ -8,31 +11,29 @@ export interface IStat {
   browserStats?: Record<string, number>;
 }
 
-export interface IURLItem {
+export type URLItemType = {
   id: string;
   longUrl: string;
   shortUrl: string;
-  stats: IStat
+  stats: StatType;
 }
 
-export interface IEncodeUrl {
-  longUrl: string
-}
+export type EncodeUrlType = z.infer<typeof urlSchema>;
 
-export interface IURLState {
+export type URLStateType = {
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
-  encodeUrl: (data: IEncodeUrl) => Promise<any>;
+  encodeUrl: (data: EncodeUrlType) => Promise<any>;
 }
 
-export interface IModal {
+export type ModalType  = {
   children: React.ReactNode;
   onClose: () => void;
 }
 
 export type NotificationType = 'success' | 'error';
 
-export interface INotification {
+export type NotificationPropsType =  {
   message: string;
   type: NotificationType;
   onClose: () => void;
