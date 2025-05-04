@@ -23,7 +23,8 @@ export type EncodeUrlType = z.infer<typeof urlSchema>;
 export type URLStateType = {
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
-  encodeUrl: (data: EncodeUrlType) => Promise<any>;
+  encodeUrl: (data: EncodeUrlType) => Promise<DefaultResponseType>;
+  listUrls: () => Promise<DefaultResponseType>;
 }
 
 export type ModalType  = {
@@ -37,4 +38,9 @@ export type NotificationPropsType =  {
   message: string;
   type: NotificationType;
   onClose: () => void;
+}
+
+export type DefaultResponseType = {
+  message: string
+  data: any
 }

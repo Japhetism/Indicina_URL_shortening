@@ -25,7 +25,7 @@ const UrlForm = ({onSuccess }: { onSuccess: () => void}) => {
 
     try {
       const encodeUrlResponse = await encodeUrl({ longUrl: longUrl });
-      if (encodeUrlResponse?.shortUrl) {
+      if (encodeUrlResponse?.data?.shortUrl) {
         onSuccess();
       }
     } catch (err) {
