@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import cors from "cors";
 import urlRoutes from "./routes/urlRoutes";
 import { redirectToLongUrl } from "./controllers/urlController";
 import {
@@ -13,6 +14,12 @@ import path from "path";
 
 const app = express();
 const PORT = 5000;
+
+// Allow requests from frontend origin at http://localhost:3000
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
 
 // definitions for swagger
 const swaggerDefinition = {
