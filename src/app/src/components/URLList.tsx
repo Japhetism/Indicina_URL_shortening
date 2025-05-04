@@ -36,6 +36,7 @@ const UrlList = () => {
   };
 
   const fetchUrls = useCallback(async () => {
+    setErrorMessage(null);
     setIsFetching(true);
     try {
       const listResponse = await listUrls();
@@ -56,8 +57,8 @@ const UrlList = () => {
 
   return (
     <div className="max-w-4xl mx-auto my-8 px-4 sm:px-0">
-      <div className="flex flex-end mb-5 justify-end">
-        {(errorMessage || successMessage) && (
+      {(errorMessage || successMessage) && (
+        <div className="mb-5">
           <Notification
             type="error"
             message={errorMessage || successMessage || ""}
@@ -66,7 +67,10 @@ const UrlList = () => {
               setSuccessMessage(null)
             }}
           />
-        )}
+        </div>
+      )}
+
+      <div className="flex flex-end mb-5 justify-end">
         <button
           onClick={() => setIsModalOpen(true)}
           className="ml-4 px-8 py-2 bg-blue-500 text-white rounded-lg"
