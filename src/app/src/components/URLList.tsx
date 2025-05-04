@@ -55,7 +55,7 @@ const UrlList = () => {
   }, [fetchUrls]);
 
   return (
-    <div className="max-w-4xl mx-auto my-8">
+    <div className="max-w-4xl mx-auto my-8 px-4 sm:px-0">
       <div className="flex flex-end mb-5 justify-end">
         {(errorMessage || successMessage) && (
           <Notification
@@ -91,31 +91,33 @@ const UrlList = () => {
           <p>{searchQuery ? `No URL found that matches ${searchQuery}` : "No URL has been added/encoded"}</p>
         </div>
       ) : (
-        <table className="min-w-full table-auto border-collapse border border-gray-300 mt-10">
-          <thead>
-            <tr className="bg-gray-100">
-              {[
-                "S/N", "Original URL", "Short URL", "Date Created",
-                "Visited", "Date Last Accessed", "Other Details"
-              ].map((item: string, index: number) => (
-                <th key={index} className="border border-gray-300 px-4 py-2 text-left">{item}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {filteredUrls.map((url, index) => (
-              <tr key={++index} className="hover:bg-gray-50">
-                <td className="border border-gray-300 px-4 py-2">{`#${++index}`}</td>
-                <td className="border border-gray-300 px-4 py-2">{url.longUrl}</td>
-                <td className="border border-gray-300 px-4 py-2">{url.shortUrl}</td>
-                <td className="border border-gray-300 px-4 py-2">{formatDateTime(url.stats.createdAt)}</td>
-                <td className="border border-gray-300 px-4 py-2">{url.stats.visits}</td>
-                <td className="border border-gray-300 px-4 py-2">{url.stats.lastAccessedAt ? formatDateTime(url.stats.lastAccessedAt) : null}</td>
-                <td className="border border-gray-300 px-4 py-2">{formatOtherDetails(url)}</td>
+        <div className="overflow-x-auto mt-10">
+          <table className="min-w-full table-auto border-collapse border border-gray-300 mt-10">
+            <thead>
+              <tr className="bg-gray-100">
+                {[
+                  "S/N", "Original URL", "Short URL", "Date Created",
+                  "Visited", "Date Last Accessed", "Other Details"
+                ].map((item: string, index: number) => (
+                  <th key={index} className="border border-gray-300 px-4 py-2 text-left">{item}</th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredUrls.map((url, index) => (
+                <tr key={++index} className="hover:bg-gray-50">
+                  <td className="border border-gray-300 px-4 py-2">{`#${++index}`}</td>
+                  <td className="border border-gray-300 px-4 py-2">{url.longUrl}</td>
+                  <td className="border border-gray-300 px-4 py-2">{url.shortUrl}</td>
+                  <td className="border border-gray-300 px-4 py-2">{formatDateTime(url.stats.createdAt)}</td>
+                  <td className="border border-gray-300 px-4 py-2">{url.stats.visits}</td>
+                  <td className="border border-gray-300 px-4 py-2">{url.stats.lastAccessedAt ? formatDateTime(url.stats.lastAccessedAt) : null}</td>
+                  <td className="border border-gray-300 px-4 py-2">{formatOtherDetails(url)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
 
       {isModalOpen && (
