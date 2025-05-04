@@ -32,7 +32,7 @@ const UrlList = () => {
 
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
-          <UrlForm />
+          <UrlForm onSuccess={() => setIsModalOpen(false)} />
         </Modal>
       )}
     </div>

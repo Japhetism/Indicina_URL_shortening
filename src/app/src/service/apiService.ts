@@ -33,7 +33,7 @@ export async function apiService<T = unknown, R = unknown>(
     headers: {
       "Accept": "application/json",
       ...(method !== "GET" && method !== "HEAD"
-        ? { "Content-Type" : "applicatin/json" }
+        ? { "Content-Type" : "application/json" }
         : {}
       ),
       ...headers,

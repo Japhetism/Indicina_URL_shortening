@@ -3,7 +3,7 @@ import Notification from "./Notification";
 import useURLStore from "../store/urlStore";
 import { urlSchema } from "../schema";
 
-const UrlForm = () => {
+const UrlForm = ({onSuccess }: { onSuccess: () => void}) => {
   const [longUrl, setLongUrl] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isEncoding, setIsEncoding] = useState<boolean>(false);
@@ -25,7 +25,9 @@ const UrlForm = () => {
 
     try {
       const encodeUrlResponse = await encodeUrl({ longUrl: longUrl });
-      console.log("encode url response ", encodeUrlResponse);
+      if (encodeUrlResponse?.shortUrl) {
+        onSuccess();
+      }
     } catch (err) {
       setErrorMessage((err as Error)?.message || "Something went wrong, please try again");
     } finally {
