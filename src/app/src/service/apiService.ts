@@ -50,14 +50,14 @@ export async function apiService<T = unknown, R = unknown>(
       status: response.status,
       statusText: response.statusText,
     }
-  } catch (error: any) {
-    if (axios.isAxiosError(error)) {
-      const message = error.response?.data.message || error.message;
+  } catch (err: any) {
+    if (axios.isAxiosError(err)) {
+      const message = err.response?.data.error || err.response?.data.message || err.message;
       throw new Error(
         `Request failed: ${message}`
       )
     } else {
-      throw error;
+      throw err;
     }
   }
 }
