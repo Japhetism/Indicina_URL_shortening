@@ -22,10 +22,10 @@ const UrlForm = () => {
     }
     
     setIsEncoding(true);
-    
+
     try {
       const encodeUrlResponse = await encodeUrl({ longUrl: longUrl });
-      console.log("encoude url response ", encodeUrlResponse);
+      console.log("encode url response ", encodeUrlResponse);
     } catch (err) {
       setErrorMessage((err as Error)?.message || "Something went wrong, please try again");
     } finally {
@@ -55,9 +55,18 @@ const UrlForm = () => {
         />
         <button
           type="submit"
-          className="mt-4 w-full p-2 bg-blue-500 text-white rounded-lg"
+          disabled={isEncoding}
+          className={`mt-4 w-full p-2 text-white rounded-lg transition-opacity duration-300 ${
+            isEncoding ? 'bg-blue-400 cursor-not-allowed opacity-70' : 'bg-blue-500 hover:bg-blue-600'
+          }`}
         >
-          Shorten URL
+          {isEncoding ? (
+            <span className="flex items-center justify-center">
+              Encoding<span className="dot-animate ml-1">...</span>
+            </span>
+          ) : (
+            "Shorten URL"
+          )}
         </button>
       </form>
     </div>
