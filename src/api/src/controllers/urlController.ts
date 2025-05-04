@@ -10,6 +10,7 @@ import {
 import {
   BAD_REQUEST_HTTP_STATUS_CODE,
   CONFLICT_HTTP_STATUS_CODE,
+  longUrlDuplicateErrorMessage,
   longUrlInvalidErrorMessage,
   longUrlRequiredErrorMessage,
   NOT_FOUND_HTTP_STATUS_CODE,
@@ -37,7 +38,7 @@ export const encodeUrl = (req: Request, res: Response): void => {
   const existing = getByLongUrl(longUrl);
   
   if (existing) {
-    res.status(CONFLICT_HTTP_STATUS_CODE).json(ResponseHelper.error('The URL has already been encoded.'));
+    res.status(CONFLICT_HTTP_STATUS_CODE).json(ResponseHelper.error(longUrlDuplicateErrorMessage));
     return;
   }
   

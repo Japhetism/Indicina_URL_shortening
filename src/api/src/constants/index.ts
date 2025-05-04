@@ -10,6 +10,7 @@ export const shortUrlRegex = new RegExp(`^${shortBaseUrl.replace('.', '\\.')}/[A
 
 export const longUrlRequiredErrorMessage = "Long URL is required";
 export const longUrlInvalidErrorMessage = "Invalid URL. must be a valid HTTP/HTTPS URL.";
+export const longUrlDuplicateErrorMessage = "The URL has already been encoded.";
 
 export const shortUrlRequiredErrorMessage = "Short URL is required";
 export const shortUrlNotFoundErrorMessage = "Short URL not found";

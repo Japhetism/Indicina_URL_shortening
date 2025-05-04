@@ -3,8 +3,10 @@ import express, { Express } from "express";
 import { encodeUrl } from "../controllers/urlController";
 import {
   BAD_REQUEST_HTTP_STATUS_CODE,
+  CONFLICT_HTTP_STATUS_CODE,
   encodeBaseUrl,
   errorResponseMessage,
+  longUrlDuplicateErrorMessage,
   longUrlForEdgeCase,
   longUrlInvalidErrorMessage,
   longUrlRequiredErrorMessage,
@@ -51,13 +53,18 @@ describe(`POST ${encodeBaseUrl}`, () => {
     expect(response.body.error).toBe(longUrlInvalidErrorMessage)
   });
 
-  it("should return the existing short URL if URL already encoded", async () => {
-    const initialResponse = await sendEncodeRequest(validLongUrl)
-    const initialShortUrl = initialResponse.body.data.shortUrl;
+  it("should return 409 if URL is already encoded", async () => {
+    const longUrl = "http://www.indicina.com.ng";
+    const initialResponse = await sendEncodeRequest(longUrl);
+    const finalResponse = await sendEncodeRequest(longUrl);
 
-    const finalResponse = await sendEncodeRequest(validLongUrl);
+    expect(initialResponse.status).toBe(OK_HTTP_STATUS_CODE);
+    expect(initialResponse.body.message).toBe(successResponseMessage);
+    assertShortUrlFormat(initialResponse);
 
-    expect(finalResponse.body.data.shortUrl).toBe(initialShortUrl);
+    expect(finalResponse.status).toBe(CONFLICT_HTTP_STATUS_CODE);
+    expect(finalResponse.body.message).toBe(errorResponseMessage);
+    expect(finalResponse.body.error).toBe(longUrlDuplicateErrorMessage);
   });
 
   it("should return 400 if long URL is missing", async () => {
