@@ -8,5 +8,7 @@ This repository contains both the **backend (API)** and the **frontend (UI)** of
 
 ## 📁 Project Structure
 
+```bash
 /api → Node.js Express backend (API logic)
 /app → React frontend (User interface)
+```
