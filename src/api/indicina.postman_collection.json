@@ -1,0 +1,64 @@
+{
+	"info": {
+		"_postman_id": "a3fa0314-fbdc-4192-9359-2970f9e76102",
+		"name": "indicina",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "3510476"
+	},
+	"item": [
+		{
+			"name": "get list",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/list"
+			},
+			"response": []
+		},
+		{
+			"name": "encode url",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"longUrl\": \"https://accessbankplc.co\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseUrl}}/encode"
+			},
+			"response": []
+		},
+		{
+			"name": "decode url",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"shortUrl\": \"http://short.est/PfNZVR\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseUrl}}/decode"
+			},
+			"response": []
+		},
+		{
+			"name": "get statistics",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/statistics/PfNZVR"
+			},
+			"response": []
+		}
+	]
+}
