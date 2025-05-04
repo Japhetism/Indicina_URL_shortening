@@ -16,9 +16,22 @@ const UrlList = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [urls, setUrls] = useState<URLItemType[]>([]);
+  const [filteredUrls, setFilteredUrls] = useState<URLItemType[]>([]);
   
   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (query.length >= 3) {
+      const filtered = urls.filter(
+        (url) =>
+          url.longUrl.toLowerCase().includes(query.toLowerCase()) ||
+          url.shortUrl.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredUrls(filtered);
+    } else {
+      setFilteredUrls(urls);
+    }
   };
 
   const fetchUrls = async () => {
@@ -27,6 +40,7 @@ const UrlList = () => {
       const listResponse = await listUrls();
       if (listResponse?.data) {
         setUrls(listResponse.data);
+        setFilteredUrls(listResponse.data);
       }
     } catch (err) {
       setErrorMessage((err as Error)?.message || "Something went wrong, please try again");
@@ -38,9 +52,6 @@ const UrlList = () => {
   useEffect(() => {
     fetchUrls();
   }, []);
-
-
-  console.log("urls are ", urls);
 
   return (
     <div className="max-w-4xl mx-auto my-8">
@@ -72,9 +83,9 @@ const UrlList = () => {
         />
       </div>
 
-      {urls.length <=0 ? (
+      {filteredUrls.length <=0 ? (
         <div className="mt-10">
-          <p>No Url has been added/encoded</p>
+          <p>{searchQuery ? `No URL found that matches ${searchQuery}` : "No URL has been added/encoded"}</p>
         </div>
       ) : (
         <table className="min-w-full table-auto border-collapse border border-gray-300 mt-10">
@@ -89,7 +100,7 @@ const UrlList = () => {
             </tr>
           </thead>
           <tbody>
-            {urls.map((url, index) => (
+            {filteredUrls.map((url, index) => (
               <tr key={++index} className="hover:bg-gray-50">
                 <td className="border border-gray-300 px-4 py-2">{`#${++index}`}</td>
                 <td className="border border-gray-300 px-4 py-2">{url.longUrl}</td>
