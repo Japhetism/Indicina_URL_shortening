@@ -42,12 +42,14 @@ export const getUrlStatistics = (shortUrl: string) => {
 }
 
 export const getUrls = () => {
-  return Array.from(urlMap.values()).map((record) => ({
-    longUrl: record.longUrl,
-    shortUrl: `${shortBaseUrl}/${record.shortUrl}`,
-    stats: record.stats
-  }))
-}
+  return Array.from(urlMap.values())
+    .map((record) => ({
+      longUrl: record.longUrl,
+      shortUrl: `${shortBaseUrl}/${record.shortUrl}`,
+      stats: record.stats,
+    }))
+    .sort((a, b) => new Date(b.stats.createdAt).getTime() - new Date(a.stats.createdAt).getTime());
+};
 
 export const incrementUrlVisit = (shortUrl: string, req: Request): void => {
   const record = urlMap.get(shortUrl);
