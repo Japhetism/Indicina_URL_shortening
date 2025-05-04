@@ -52,7 +52,6 @@ export async function apiService<T = unknown, R = unknown>(
     }
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      const status = error.response?.status;
       const message = error.response?.data.message || error.message;
       throw new Error(
         `Request failed: ${message}`

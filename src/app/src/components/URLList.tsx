@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Notification from './Notification';
 import useURLStore from '../store/urlStore';
 import Modal from './Modal';
@@ -35,7 +35,7 @@ const UrlList = () => {
     }
   };
 
-  const fetchUrls = async () => {
+  const fetchUrls = useCallback(async () => {
     setIsFetching(true);
     try {
       const listResponse = await listUrls();
@@ -48,11 +48,11 @@ const UrlList = () => {
     } finally {
       setIsFetching(false);
     }
-  }
+  }, [listUrls]);
 
   useEffect(() => {
     fetchUrls();
-  }, []);
+  }, [fetchUrls]);
 
   return (
     <div className="max-w-4xl mx-auto my-8">
