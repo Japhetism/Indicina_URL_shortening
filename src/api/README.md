@@ -9,7 +9,6 @@ This project implements a **URL Shortener API** using **Node.js** and **TypeScri
 - [Run the Application](#run-the-application)
 - [Testing](#testing)
 - [API Documentation](#api-documentation)
-- [Contributing](#contributing)
 
 ## Features
 - **Shorten URLs**: Converts long URLs into short, easy-to-share links.
