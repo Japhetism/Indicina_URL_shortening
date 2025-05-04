@@ -5,6 +5,7 @@ import Modal from './Modal';
 import UrlForm from './URLForm';
 import { URLItemType } from '../types';
 import { formatDateTime, formatOtherDetails } from '../utils/helper';
+import Loader from './Loader';
 
 const UrlList = () => {
 
@@ -83,7 +84,9 @@ const UrlList = () => {
         />
       </div>
 
-      {filteredUrls.length <=0 ? (
+      {isFetching ? (
+        <Loader />
+      ) : filteredUrls.length <=0 ? (
         <div className="mt-10">
           <p>{searchQuery ? `No URL found that matches ${searchQuery}` : "No URL has been added/encoded"}</p>
         </div>
