@@ -69,6 +69,14 @@ npm test
 
 This will run all the test cases in the src directory and output the results to the console.
 
+### Running Specific Tests
+
+To run test for specific files or functions, use Jest's --testNamePattern flag, fr example:
+
+```bash
+npm test -- --testNamePattern="POST /api/v1/encode"
+```
+
 ## API Documentation
 
 The API documented using swagger UI. To access the API documentation, start the server and visit:
