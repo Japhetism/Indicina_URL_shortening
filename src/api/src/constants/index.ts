@@ -22,3 +22,4 @@ export const decodeBaseUrl = `${apiBaseUrl}/decode`;
 export const NOT_FOUND_HTTP_STATUS_CODE = 404;
 export const BAD_REQUEST_HTTP_STATUS_CODE = 400;
 export const OK_HTTP_STATUS_CODE = 200;
+export const INTERNAL_SERVER_ERROR_HTTP_STATUS_CODE = 500;
