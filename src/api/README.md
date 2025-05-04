@@ -32,8 +32,8 @@ This project implements a **URL Shortener API** using **Node.js** and **TypeScri
 To get started with the project, clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/yourusername/url-shortener-api.git
-cd url-shortener-api
+git clone https://github.com/Japhetism/Indicina_URL_shortening.git
+cd src/api
 npm install
 ```
 
@@ -69,5 +69,13 @@ npm test
 ```
 
 This will run all the test cases in the src directory and output the results to the console.
+
+## API Documentation
+
+The API documented using swagger UI. To access the API documentation, start the server and visit:
+
+```bash
+http://localhost:5000/api-docs
+```
 
 
