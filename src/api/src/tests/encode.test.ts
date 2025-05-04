@@ -2,11 +2,13 @@ import request from "supertest";
 import express, { Express } from "express";
 import { encodeUrl } from "../controllers/urlController";
 import {
+  BAD_REQUEST_HTTP_STATUS_CODE,
   encodeBaseUrl,
   errorResponseMessage,
   longUrlForEdgeCase,
   longUrlInvalidErrorMessage,
   longUrlRequiredErrorMessage,
+  OK_HTTP_STATUS_CODE,
   shortUrlRegex,
   successResponseMessage,
   validHttpUrl,
@@ -34,7 +36,7 @@ describe(`POST ${encodeBaseUrl}`, () => {
   it("should encode a valid URL into a shortened URL", async () => {
     const response = await sendEncodeRequest(validLongUrl)
     
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(OK_HTTP_STATUS_CODE);
     expect(response.body.message).toBe(successResponseMessage);
     assertShortUrlFormat(response);
   });
@@ -44,7 +46,7 @@ describe(`POST ${encodeBaseUrl}`, () => {
 
     const response = await sendEncodeRequest(longUrl);
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(BAD_REQUEST_HTTP_STATUS_CODE);
     expect(response.body.message).toBe(errorResponseMessage);
     expect(response.body.error).toBe(longUrlInvalidErrorMessage)
   });
@@ -63,7 +65,7 @@ describe(`POST ${encodeBaseUrl}`, () => {
       .post("/api/v1/encode")
       .send({});
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(BAD_REQUEST_HTTP_STATUS_CODE);
     expect(response.body.message).toBe(errorResponseMessage);
     expect(response.body.error).toBe(longUrlRequiredErrorMessage);
   });
@@ -71,7 +73,7 @@ describe(`POST ${encodeBaseUrl}`, () => {
   it("should encode an HTTP URL (not just HTTPS)", async () => {
     const response = await sendEncodeRequest(validHttpUrl);
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(OK_HTTP_STATUS_CODE);
     expect(response.body.message).toBe(successResponseMessage);
     assertShortUrlFormat(response);
   });
@@ -79,7 +81,7 @@ describe(`POST ${encodeBaseUrl}`, () => {
   it("should encode a valid URL with query parameters", async () => {
     const response = await sendEncodeRequest(validUrlWithQuery);
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(OK_HTTP_STATUS_CODE);
     expect(response.body.message).toBe(successResponseMessage);
     assertShortUrlFormat(response);
   });
@@ -98,7 +100,7 @@ describe(`POST ${encodeBaseUrl}`, () => {
 
     const response = await sendEncodeRequest(longUrl);
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(OK_HTTP_STATUS_CODE);
     expect(response.body.message).toBe(successResponseMessage);
     assertShortUrlFormat(response);
   });
@@ -108,7 +110,7 @@ describe(`POST ${encodeBaseUrl}`, () => {
 
     const response = await sendEncodeRequest(longUrl);
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(BAD_REQUEST_HTTP_STATUS_CODE);
     expect(response.body.message).toBe(errorResponseMessage)
     expect(response.body.error).toBe(longUrlInvalidErrorMessage);
   });
@@ -116,7 +118,7 @@ describe(`POST ${encodeBaseUrl}`, () => {
   it("should return 400 if the long URL is an empty string", async () => {
     const response = await sendEncodeRequest("")
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(BAD_REQUEST_HTTP_STATUS_CODE);
     expect(response.body.message).toBe(errorResponseMessage)
     expect(response.body.error).toBe(longUrlRequiredErrorMessage);
   });

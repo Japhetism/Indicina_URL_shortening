@@ -18,3 +18,7 @@ export const apiBaseUrl = "/api/v1";
 
 export const encodeBaseUrl = `${apiBaseUrl}/encode`;
 export const decodeBaseUrl = `${apiBaseUrl}/decode`;
+
+export const NOT_FOUND_HTTP_STATUS_CODE = 404;
+export const BAD_REQUEST_HTTP_STATUS_CODE = 400;
+export const OK_HTTP_STATUS_CODE = 200;

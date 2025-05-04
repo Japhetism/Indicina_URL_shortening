@@ -8,8 +8,11 @@ import {
   saveUrl,
 } from "../repositories/urlRepository";
 import {
+  BAD_REQUEST_HTTP_STATUS_CODE,
   longUrlInvalidErrorMessage,
   longUrlRequiredErrorMessage,
+  NOT_FOUND_HTTP_STATUS_CODE,
+  OK_HTTP_STATUS_CODE,
   shortBaseUrl,
   shortUrlNotFoundErrorMessage,
   shortUrlRequiredErrorMessage
@@ -21,32 +24,32 @@ export const encodeUrl = (req: Request, res: Response): void => {
   const { longUrl } = req.body;
   
   if (!longUrl) {
-    res.status(400).json(ResponseHelper.error(longUrlRequiredErrorMessage));
+    res.status(BAD_REQUEST_HTTP_STATUS_CODE).json(ResponseHelper.error(longUrlRequiredErrorMessage));
     return;
   }
 
   if (!isValidHttpUrl(longUrl)) {
-    res.status(400).json(ResponseHelper.error(longUrlInvalidErrorMessage));
+    res.status(BAD_REQUEST_HTTP_STATUS_CODE).json(ResponseHelper.error(longUrlInvalidErrorMessage));
     return;
   }
   
   const existing = getByLongUrl(longUrl);
   
   if (existing) {
-    res.json(ResponseHelper.success({ shortUrl: `${shortBaseUrl}/${existing.shortUrl}` }));
+    res.status(OK_HTTP_STATUS_CODE).json(ResponseHelper.success({ shortUrl: `${shortBaseUrl}/${existing.shortUrl}` }));
     return;
   }
   
   const shortUrl = generateShortUrlCode();
   const record = saveUrl(shortUrl, longUrl);
-  res.json(ResponseHelper.success({ shortUrl: `${shortBaseUrl}/${record.shortUrl}` }))
+  res.status(OK_HTTP_STATUS_CODE).json(ResponseHelper.success({ shortUrl: `${shortBaseUrl}/${record.shortUrl}` }))
 }
 
 export const decodeUrl = (req: Request, res: Response): void => {
   const { shortUrl } = req.body;
   
   if (!shortUrl) {
-    res.status(400).json(ResponseHelper.error(shortUrlRequiredErrorMessage));
+    res.status(BAD_REQUEST_HTTP_STATUS_CODE).json(ResponseHelper.error(shortUrlRequiredErrorMessage));
     return;
   }
   
@@ -55,26 +58,26 @@ export const decodeUrl = (req: Request, res: Response): void => {
   const record = getByShortUrlCode(shortUrlCode);
   
   if (!record) {
-    res.status(400).json(ResponseHelper.error(shortUrlNotFoundErrorMessage));
+    res.status(NOT_FOUND_HTTP_STATUS_CODE).json(ResponseHelper.error(shortUrlNotFoundErrorMessage));
     return;
   }
   
-  res.status(200).json(ResponseHelper.success({ longUrl: record.longUrl }));
+  res.status(OK_HTTP_STATUS_CODE).json(ResponseHelper.success({ longUrl: record.longUrl }));
 }
 
 export const getUrlStats = (req: Request, res: Response): void => {
   const stat= getUrlStatistics(req.params.url_path);
   
   if (!stat) {
-    res.status(400).json(ResponseHelper.error("URL not found"));
+    res.status(NOT_FOUND_HTTP_STATUS_CODE).json(ResponseHelper.error("URL not found"));
     return;
   }
     
-  res.status(200).json(ResponseHelper.success(stat));
+  res.status(OK_HTTP_STATUS_CODE).json(ResponseHelper.success(stat));
 }
 
 export const listUrls = (_req: Request, res: Response): void => {
-  res.status(200).json(ResponseHelper.success(getUrls()))
+  res.status(OK_HTTP_STATUS_CODE).json(ResponseHelper.success(getUrls()))
 }
 
 export const redirectToLongUrl = (req: Request, res: Response): void => {
@@ -83,10 +86,10 @@ export const redirectToLongUrl = (req: Request, res: Response): void => {
   const record = getByShortUrlCode(code);
   
   if (!record) {
-    res.status(400).send("Not found");
+    res.status(NOT_FOUND_HTTP_STATUS_CODE).send("Not found");
     return;
   }
     
   incrementUrlVisit(code, req);
-  res.redirect(record.longUrl);
+  res.status(OK_HTTP_STATUS_CODE).redirect(record.longUrl);
 }

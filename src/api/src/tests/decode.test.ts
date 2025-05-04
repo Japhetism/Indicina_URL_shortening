@@ -2,9 +2,12 @@ import request from "supertest";
 import express, { Express } from "express";
 import { encodeUrl, decodeUrl } from "../controllers/urlController";
 import {
+    BAD_REQUEST_HTTP_STATUS_CODE,
   decodeBaseUrl,
   encodeBaseUrl,
   errorResponseMessage,
+  NOT_FOUND_HTTP_STATUS_CODE,
+  OK_HTTP_STATUS_CODE,
   shortBaseUrl,
   shortUrlNotFoundErrorMessage,
   shortUrlRequiredErrorMessage,
@@ -35,7 +38,7 @@ describe(`POST ${decodeBaseUrl}`, () => {
   it("should decode a valid short URL", async () => {
     const response = await sendDecodeRequest(shortUrl);
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(OK_HTTP_STATUS_CODE);
     expect(response.body.message).toBe(successResponseMessage);
     expect(response.body.data.longUrl).toBe(validLongUrl);
   });
@@ -43,7 +46,7 @@ describe(`POST ${decodeBaseUrl}`, () => {
   it("should return 400 if shortUrl is missing", async () => {
     const response = await request(app).post(decodeBaseUrl).send({});
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(BAD_REQUEST_HTTP_STATUS_CODE);
     expect(response.body.message).toBe(errorResponseMessage);
     expect(response.body.error).toBe(shortUrlRequiredErrorMessage);
   });
@@ -59,7 +62,7 @@ describe(`POST ${decodeBaseUrl}`, () => {
   it("should return 400 for a completely invalid short URL", async () => {
     const response = await sendDecodeRequest("invalid");
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(NOT_FOUND_HTTP_STATUS_CODE);
     expect(response.body.message).toBe(errorResponseMessage);
     expect(response.body.error).toBe(shortUrlNotFoundErrorMessage);
   });
@@ -68,7 +71,7 @@ describe(`POST ${decodeBaseUrl}`, () => {
     const fakeUrl = `${shortBaseUrl}/abcdef`;
     const response = await sendDecodeRequest(fakeUrl);
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(NOT_FOUND_HTTP_STATUS_CODE);
     expect(response.body.message).toBe(errorResponseMessage);
     expect(response.body.error).toBe(shortUrlNotFoundErrorMessage);
   });
@@ -80,7 +83,7 @@ describe(`POST ${decodeBaseUrl}`, () => {
 
     const decodeResponse = await sendDecodeRequest(newShort);
 
-    expect(decodeResponse.status).toBe(200);
+    expect(decodeResponse.status).toBe(OK_HTTP_STATUS_CODE);
     expect(decodeResponse.body.message).toBe(successResponseMessage);
     expect(decodeResponse.body.data.longUrl).toBe(newUrl);
   });
@@ -92,7 +95,7 @@ describe(`POST ${decodeBaseUrl}`, () => {
 
     const decodeRes = await sendDecodeRequest(short);
 
-    expect(decodeRes.status).toBe(200);
+    expect(decodeRes.status).toBe(OK_HTTP_STATUS_CODE);
     expect(decodeRes.body.data.longUrl).toBe(urlWithQuery);
   });
 
@@ -103,7 +106,7 @@ describe(`POST ${decodeBaseUrl}`, () => {
 
     const decodeRes = await sendDecodeRequest(short);
 
-    expect(decodeRes.status).toBe(200);
+    expect(decodeRes.status).toBe(OK_HTTP_STATUS_CODE);
     expect(decodeRes.body.data.longUrl).toBe(url);
   });
 
@@ -114,7 +117,7 @@ describe(`POST ${decodeBaseUrl}`, () => {
 
     const decodeRes = await sendDecodeRequest(short);
 
-    expect(decodeRes.status).toBe(200);
+    expect(decodeRes.status).toBe(OK_HTTP_STATUS_CODE);
     expect(decodeRes.body.data.longUrl).toBe(url);
   });
 
@@ -127,7 +130,7 @@ describe(`POST ${decodeBaseUrl}`, () => {
 
     const decodeRes = await sendDecodeRequest(short);
 
-    expect(decodeRes.status).toBe(200);
+    expect(decodeRes.status).toBe(OK_HTTP_STATUS_CODE);
     expect(decodeRes.body.data.longUrl).toBe(veryLongUrl);
   });
 });
