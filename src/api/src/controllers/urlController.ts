@@ -9,6 +9,7 @@ import {
 } from "../repositories/urlRepository";
 import {
   BAD_REQUEST_HTTP_STATUS_CODE,
+  CONFLICT_HTTP_STATUS_CODE,
   longUrlInvalidErrorMessage,
   longUrlRequiredErrorMessage,
   NOT_FOUND_HTTP_STATUS_CODE,
@@ -36,7 +37,7 @@ export const encodeUrl = (req: Request, res: Response): void => {
   const existing = getByLongUrl(longUrl);
   
   if (existing) {
-    res.status(OK_HTTP_STATUS_CODE).json(ResponseHelper.success({ shortUrl: `${shortBaseUrl}/${existing.shortUrl}` }));
+    res.status(CONFLICT_HTTP_STATUS_CODE).json(ResponseHelper.error('The URL has already been encoded.'));
     return;
   }
   
