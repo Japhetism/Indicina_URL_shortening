@@ -1,6 +1,7 @@
 import { useState } from "react"
 import Notification from "./Notification";
 import useURLStore from "../store/urlStore";
+import { urlSchema } from "../schema";
 
 const UrlForm = () => {
   const [longUrl, setLongUrl] = useState<string>('');
@@ -12,16 +13,23 @@ const UrlForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
-    if (longUrl) {
-      setIsEncoding(true);
-      try {
-        const encodeUrlResponse = await encodeUrl({ longUrl: longUrl });
-        console.log("encoude url response ", encodeUrlResponse);
-      } catch (err) {
-        setErrorMessage((err as Error)?.message || "Something went wrong, please try again");
-      } finally {
-        setIsEncoding(false);
-      }
+
+    const validation = urlSchema.safeParse({ longUrl });
+
+    if (!validation.success) {
+      setErrorMessage(validation.error.errors[0].message);
+      return;
+    }
+    
+    setIsEncoding(true);
+    
+    try {
+      const encodeUrlResponse = await encodeUrl({ longUrl: longUrl });
+      console.log("encoude url response ", encodeUrlResponse);
+    } catch (err) {
+      setErrorMessage((err as Error)?.message || "Something went wrong, please try again");
+    } finally {
+      setIsEncoding(false);
     }
   }
 
